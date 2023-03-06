@@ -36,7 +36,7 @@ public class ClientController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Client> getClients(@RequestBody Client client) {
+    public ResponseEntity<Client> createClient(@RequestBody Client client) {
         Client persistedClient = clientService.createClient(client);
         if (persistedClient == null)
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
