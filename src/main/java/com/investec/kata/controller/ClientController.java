@@ -42,4 +42,15 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         return new ResponseEntity<>(client, HttpStatus.CREATED);
     }
+
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Client> updateClient(
+            @RequestBody Client client,
+            @PathVariable("id") String id
+    ) {
+        Client persistedClient = clientService.updateClient(id, client);
+        if (persistedClient == null)
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(client, HttpStatus.ACCEPTED);
+    }
 }

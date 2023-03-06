@@ -7,22 +7,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+import static com.investec.kata.controller.TestUtils.getClientJson;
 import static com.investec.kata.testmodel.ClientBuilder.aClient;
 import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -91,7 +86,23 @@ class ClientControllerTest {
                 .andExpect(status().isUnprocessableEntity());
     }
 
-    private String getClientJson() throws IOException {
-        return new String(Files.readAllBytes(Paths.get(new ClassPathResource("client.json").getURI())));
+    @Test
+    void updateClientShouldReturnClient() throws Exception {
+        given(clientService.updateClient(anyString(), any())).willReturn(aClient().build());
+        mockMvc.perform(put("/clients/9a10a3f4-1bc4-4116-87eb-478b7bcf665f")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(getClientJson()))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void updateClientWhenNotUpdatedShouldReturnNotAcceptable() throws Exception {
+        given(clientService.updateClient(anyString(), any())).willReturn(null);
+        mockMvc.perform(put("/clients/9a10a3f4-1bc4-4116-87eb-478b7bcf665f")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(getClientJson()))
+                .andExpect(status().isNotAcceptable());
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit;
 import org.hibernate.annotations.GenericGenerator;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Client {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -29,7 +31,7 @@ public class Client {
     @Column
     private String physicalAddress;
 
-    public Client(String firstName, String lastName, String mobileNumber, String idNumber, String physicalAddress) {
+    public Client(String firstName, String lastName, String idNumber, String mobileNumber, String physicalAddress) {
         if (firstName == null || firstName.isEmpty())
             throw new ClientValidationException("First name is required");
         this.firstName = firstName;

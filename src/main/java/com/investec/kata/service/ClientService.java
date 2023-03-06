@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class ClientService {
     }
 
     public List<Client> getClientsByMobileNumber(String mobileNumber) {
-        return clientRepository.findBymobileNumber(mobileNumber);
+        return clientRepository.findByMobileNumber(mobileNumber);
     }
 
     public List<Client> getClients() {
@@ -30,6 +31,14 @@ public class ClientService {
     }
 
     public Client createClient(Client client) {
+        return clientRepository.save(client);
+    }
+
+    public Client updateClient(String id, Client client) {
+        Optional<Client> optionalClient = clientRepository.findById(id);
+        if (optionalClient.isEmpty())
+            return null;
+        client.setId(optionalClient.get().getId());
         return clientRepository.save(client);
     }
 }
